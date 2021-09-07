@@ -10,6 +10,6 @@ Route::group([
     Route::get('/login', 'Psychai\FittCommunicator\Http\Controllers\FittCommunicatorController@login')
         ->name('fitt-communicator.login.get');
 
-    Route::get('/register', 'Psychai\FittCommunicator\Http\Controllers\FittCommunicatorController@register')
-        ->name('fitt-communicator.register.get');
+    Route::get('/callback', 'Psychai\FittCommunicator\Http\Controllers\FittCommunicatorController@callback')
+        ->name('fitt-communicator.callback.get');
 });
