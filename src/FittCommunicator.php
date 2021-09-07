@@ -4,13 +4,24 @@ namespace Psychai\FittCommunicator;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Log;
-use Psychai\FittCommunicator\Exceptions\LoginException;
-use Psychai\FittCommunicator\Exceptions\RegistrationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class FittCommunicator
 {
+    /**
+     * @var string
+     */
+    private string $personId;
+
+    /**
+     * @var array
+     */
     private array $config;
+
+    /**
+     * @var Client
+     */
     private Client $client;
 
     /**
@@ -24,9 +35,8 @@ class FittCommunicator
             'verify' => in_array($this->config['app.env'], ['prod', 'production', 'live']),
             'headers' => [
                 'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'X_FITT_COMMUNICATOR_ID' => $this->config['fitt-communicator']['client_id'],
-                'X_FITT_COMMUNICATOR_HASH' => hash('sha256', $this->config['fitt-communicator']['client_id'] . $this->config['fitt-communicator']['client_secret'])
+                'X-Fitt-Communicator-Id' => $this->config['fitt-communicator']['client_id'],
+                'X-Fitt-Communicator-Hash' => hash('sha256', $this->config['fitt-communicator']['client_id'] . $this->config['fitt-communicator']['client_secret'])
             ],
             'base_uri' => self::getBaseUrl(),
         ]);
@@ -34,42 +44,37 @@ class FittCommunicator
 
     /**
      * @return string
-     * @throws LoginException
      * @throws GuzzleException
      */
     public function login(): string
     {
-        $response = $this->client->post('/fitt-communicator/login');
-
-        if ($response->getStatusCode() !== 200) {
-            if ($this->config['app.debug'] ?? null == true) {
-                Log::error('FITT_COMMUNICATOR::login ' . $response->getBody()->getContents());
-            }
-
-            throw new LoginException('Could not login to fitt communicator. Enable APP_DEBUG and see logs for more info.');
-        }
-
-        return $response->getBody()->getContents();
+        return redirect($this->client->get('/fitt-communicator/login')->getBody()->getContents());
     }
 
     /**
-     * @return string
-     * @throws RegistrationException
-     * @throws GuzzleException
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function register(): string
+    public function callback(Request $request): RedirectResponse
     {
-        $response = $this->client->post('/fitt-communicator/register');
+        $request->validate([
+            'client_id' => 'required|string',
+            'pid' => 'required|string',
+            'nonce' => 'required|string',
+        ]);
 
-        if ($response->getStatusCode() !== 200) {
-            if ($this->config['app.debug'] ?? null == true) {
-                Log::error('FITT_COMMUNICATOR::login ' . $response->getBody()->getContents());
-            }
-
-            throw new RegistrationException('Could not login to fitt communicator. Enable APP_DEBUG and see logs for more info.');
+        if ($request->get('client_id') !== hash('sha256', $this->config['fitt-communicator']['client_id'].$this->config['fitt-communicator']['client_secret'].$request->get('nonce'))) {
+            abort(401);
         }
 
-        return $response->getBody()->getContents();
+        $this->personId = $request->get('pid');
+
+        return redirect($this->config['fitt-communicator']['client_id']);
+    }
+
+    public function getPersonId()
+    {
+        return $this->personId;
     }
 
     /**

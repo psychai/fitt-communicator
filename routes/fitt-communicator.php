@@ -8,7 +8,7 @@ Route::group([
 ], function () {
 
     Route::get('/login', 'Psychai\FittCommunicator\Http\Controllers\FittCommunicatorController@login')
-    ->name('fitt-communicator.login.get');
+        ->name('fitt-communicator.login.get');
 
     Route::get('/register', 'Psychai\FittCommunicator\Http\Controllers\FittCommunicatorController@register')
         ->name('fitt-communicator.register.get');
