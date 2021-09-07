@@ -9,7 +9,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->mergeConfigFrom($this->configPath(), 'fitt-communicator');
 
         $this->app->singleton(FittCommunicator::class, function ($app) {
-            $options = $app['config']->get('fitt-communicator');
+            $options['app.env'] = $app['config']->get('app')['env'] ?? null;
+            $options['app.debug'] = $app['config']->get('app')['debug'] ?? null;
+            $options['fitt-communicator'] = $app['config']->get('fitt-communicator');
 
             return new FittCommunicator($options);
         });

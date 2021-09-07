@@ -21,9 +21,12 @@ class FittCommunicator
         $this->config = $config;
 
         $this->client = new Client([
+            'defaults' => [
+                'verify' => in_array($this->config['app.env'], ['prod', 'production', 'live'])
+            ],
             'base_uri' => self::getBaseUrl(),
-            'X_FITT_COMMUNICATOR_ID' => $this->config['fitt-communicator.client_id'],
-            'X_FITT_COMMUNICATOR_HASH' => hash('sha256', $this->config['fitt-communicator.client_id'].$this->config['fitt-communicator.client_secret'])
+            'X_FITT_COMMUNICATOR_ID' => $this->config['fitt-communicator']['client_id'],
+            'X_FITT_COMMUNICATOR_HASH' => hash('sha256', $this->config['fitt-communicator']['client_id'].$this->config['fitt-communicator']['client_secret'])
         ]);
     }
 
@@ -72,7 +75,7 @@ class FittCommunicator
      */
     private function getBaseUrl(): string
     {
-        $url = trim(strtolower($this->config['fitt-communicator.base_url'] ?? null));
+        $url = trim(strtolower($this->config['fitt-communicator']['base_url'] ?? null));
         if (!empty($url)) {
             return $url;
         }
