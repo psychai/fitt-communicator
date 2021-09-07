@@ -24,11 +24,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Fitt\\Communicator\\ServiceProvider"
-            ],
-            "aliases": {
-                "FittCommunicator": "Fitt\\Communicator\\Facade"
-            }
+                "Psychai\\FittCommunicator\\ServiceProvider"
+            ]
         }
     }
 }
