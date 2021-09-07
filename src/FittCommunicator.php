@@ -10,6 +10,7 @@ use Psychai\FittCommunicator\Exceptions\RegistrationException;
 
 class FittCommunicator
 {
+    private array $config;
     private Client $client;
 
     /**
@@ -17,10 +18,12 @@ class FittCommunicator
      */
     public function __construct(array $config)
     {
+        $this->config = $config;
+
         $this->client = new Client([
             'base_uri' => self::getBaseUrl(),
-            'X_FITT_COMMUNICATOR_ID' => $config['fitt-communicator.client_id'],
-            'X_FITT_COMMUNICATOR_HASH' => hash('sha256', $config['fitt-communicator.client_id'].$config['fitt-communicator.client_secret'])
+            'X_FITT_COMMUNICATOR_ID' => $this->config['fitt-communicator.client_id'],
+            'X_FITT_COMMUNICATOR_HASH' => hash('sha256', $this->config['fitt-communicator.client_id'].$this->config['fitt-communicator.client_secret'])
         ]);
     }
 
@@ -34,7 +37,7 @@ class FittCommunicator
         $response = $this->client->post('/fitt-communicator/login');
 
         if ($response->getStatusCode() !== 200) {
-            if ($_SERVER['APP_DEBUG'] == true) {
+            if ($this->config['app.debug'] ?? null == true) {
                 Log::error('FITT_COMMUNICATOR::login '.$response->getBody()->getContents());
             }
 
@@ -54,7 +57,7 @@ class FittCommunicator
         $response = $this->client->post('/fitt-communicator/register');
 
         if ($response->getStatusCode() !== 200) {
-            if ($_SERVER['APP_DEBUG'] == true) {
+            if ($this->config['app.debug'] ?? null == true) {
                 Log::error('FITT_COMMUNICATOR::login '.$response->getBody()->getContents());
             }
 
@@ -69,12 +72,12 @@ class FittCommunicator
      */
     private function getBaseUrl(): string
     {
-        $url = trim(strtolower($_SERVER['FITT_COMMUNICATOR_BASE_URL']));
+        $url = trim(strtolower($this->config['fitt-communicator.base_url'] ?? null));
         if (!empty($url)) {
             return $url;
         }
 
-        $environment = trim(strtolower($_SERVER['APP_ENV']));
+        $environment = trim(strtolower($this->config['app.env'] ?? null));
         if ($environment === 'prod' || $environment === 'production') {
             return 'https://manage.fitt.ai';
         }
