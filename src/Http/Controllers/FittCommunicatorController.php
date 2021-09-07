@@ -1,6 +1,6 @@
 <?php
 
-namespace Psychai\FittCommunicator\Http\Controller;
+namespace Psychai\FittCommunicator\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
