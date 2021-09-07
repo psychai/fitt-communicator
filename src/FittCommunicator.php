@@ -21,9 +21,7 @@ class FittCommunicator
         $this->config = $config;
 
         $this->client = new Client([
-            'defaults' => [
-                'verify' => in_array($this->config['app.env'], ['prod', 'production', 'live'])
-            ],
+            'verify' => in_array($this->config['app.env'], ['prod', 'production', 'live']),
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
