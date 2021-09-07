@@ -72,7 +72,7 @@ class FittCommunicator
         return redirect($this->config['fitt-communicator']['client_id']);
     }
 
-    public function getPersonId()
+    public function getPersonId(): string
     {
         return $this->personId;
     }
