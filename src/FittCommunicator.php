@@ -24,9 +24,13 @@ class FittCommunicator
             'defaults' => [
                 'verify' => in_array($this->config['app.env'], ['prod', 'production', 'live'])
             ],
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'X_FITT_COMMUNICATOR_ID' => $this->config['fitt-communicator']['client_id'],
+                'X_FITT_COMMUNICATOR_HASH' => hash('sha256', $this->config['fitt-communicator']['client_id'] . $this->config['fitt-communicator']['client_secret'])
+            ],
             'base_uri' => self::getBaseUrl(),
-            'X_FITT_COMMUNICATOR_ID' => $this->config['fitt-communicator']['client_id'],
-            'X_FITT_COMMUNICATOR_HASH' => hash('sha256', $this->config['fitt-communicator']['client_id'].$this->config['fitt-communicator']['client_secret'])
         ]);
     }
 
@@ -41,7 +45,7 @@ class FittCommunicator
 
         if ($response->getStatusCode() !== 200) {
             if ($this->config['app.debug'] ?? null == true) {
-                Log::error('FITT_COMMUNICATOR::login '.$response->getBody()->getContents());
+                Log::error('FITT_COMMUNICATOR::login ' . $response->getBody()->getContents());
             }
 
             throw new LoginException('Could not login to fitt communicator. Enable APP_DEBUG and see logs for more info.');
@@ -61,7 +65,7 @@ class FittCommunicator
 
         if ($response->getStatusCode() !== 200) {
             if ($this->config['app.debug'] ?? null == true) {
-                Log::error('FITT_COMMUNICATOR::login '.$response->getBody()->getContents());
+                Log::error('FITT_COMMUNICATOR::login ' . $response->getBody()->getContents());
             }
 
             throw new RegistrationException('Could not login to fitt communicator. Enable APP_DEBUG and see logs for more info.');
