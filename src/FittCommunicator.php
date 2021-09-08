@@ -99,6 +99,11 @@ class FittCommunicator
             'pid' => 'required|string',
             'nonce' => 'required|string',
             'action' => 'required|string',
+            'pass1' => 'optional|string',
+            'pass2' => 'optional|string',
+            'pass3' => 'optional|string',
+            'pass4' => 'optional|string',
+            'pass5' => 'optional|string',
         ]);
 
         if ($request->get('client_id') !== hash('sha256', $this->config['fitt-communicator']['client_id'].$this->config['fitt-communicator']['client_secret'].$request->get('nonce'))) {
@@ -109,7 +114,24 @@ class FittCommunicator
             die('Please setup your FITT_COMMUNICATOR_CALLBACK_URL. See the README.md for more information.');
         }
 
-        return redirect($this->config['fitt-communicator']['callback_url'].'?pid='.$request->get('pid').'&action='.$request->get('action'));
+        $string = '';
+        if ($request->has('pass1')) {
+            $string .= '&pass1='.$request->get('pass1');
+        }
+        if ($request->has('pass2')) {
+            $string .= '&pass2='.$request->get('pass2');
+        }
+        if ($request->has('pass3')) {
+            $string .= '&pass3='.$request->get('pass3');
+        }
+        if ($request->has('pass4')) {
+            $string .= '&pass4='.$request->get('pass4');
+        }
+        if ($request->has('pass5')) {
+            $string .= '&pass5='.$request->get('pass5');
+        }
+
+        return redirect($this->config['fitt-communicator']['callback_url'].'?pid='.$request->get('pid').'&action='.$request->get('action').$string);
     }
 
     /**
