@@ -10,11 +10,6 @@ use Illuminate\Http\Request;
 class FittCommunicator
 {
     /**
-     * @var string
-     */
-    private string $personId;
-
-    /**
      * @var array
      */
     private array $config;
@@ -43,10 +38,10 @@ class FittCommunicator
     }
 
     /**
-     * @return string
+     * @return RedirectResponse
      * @throws GuzzleException
      */
-    public function login(): string
+    public function login(): RedirectResponse
     {
         return redirect($this->client->get('/fitt-communicator/login')->getBody()->getContents());
     }
@@ -61,20 +56,14 @@ class FittCommunicator
             'client_id' => 'required|string',
             'pid' => 'required|string',
             'nonce' => 'required|string',
+            'action' => 'required|string',
         ]);
 
         if ($request->get('client_id') !== hash('sha256', $this->config['fitt-communicator']['client_id'].$this->config['fitt-communicator']['client_secret'].$request->get('nonce'))) {
             abort(401);
         }
 
-        $this->personId = $request->get('pid');
-
-        return redirect($this->config['fitt-communicator']['client_id']);
-    }
-
-    public function getPersonId(): string
-    {
-        return $this->personId;
+        return redirect($this->config['fitt-communicator']['callback_url'].'?pid='.$request->get('pid').'&action='.$request->get('action'));
     }
 
     /**
