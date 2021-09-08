@@ -56,36 +56,18 @@ class FittCommunicator
         string $pass5 = null
     ): RedirectResponse
     {
-        $params = [];
-        if (!empty($clientId)) {
-            $params[] = 'id='.$clientId;
-        }
-        if (!empty($pass1)) {
-            $params[] = 'pass1='.$pass1;
-        }
-        if (!empty($pass2)) {
-            $params[] = 'pass2='.$pass2;
-        }
-        if (!empty($pass3)) {
-            $params[] = 'pass3='.$pass3;
-        }
-        if (!empty($pass4)) {
-            $params[] = 'pass4='.$pass4;
-        }
-        if (!empty($pass5)) {
-            $params[] = 'pass5='.$pass5;
-        }
-
         $url = '/fitt-communicator/login';
-        $string = '';
-        if (!empty($params)) {
-            $string = '?';
-            foreach ($params as $param) {
-                $string .= $param . '&';
-            }
-            $string = substr($string, 0, -1);
-        }
-        return redirect($this->client->get($url.$string)->getBody()->getContents());
+
+        return redirect($this->client->get($url, [
+            'query' => [
+                'clientId' => $clientId,
+                'pass1' => $pass1,
+                'pass2' => $pass2,
+                'pass3' => $pass3,
+                'pass4' => $pass4,
+                'pass5' => $pass5
+            ]
+        ])->getBody()->getContents());
     }
 
     /**
