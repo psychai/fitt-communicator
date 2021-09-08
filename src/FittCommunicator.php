@@ -38,12 +38,54 @@ class FittCommunicator
     }
 
     /**
+     * @param string|null $clientId
+     * @param string|null $pass1
+     * @param string|null $pass2
+     * @param string|null $pass3
+     * @param string|null $pass4
+     * @param string|null $pass5
      * @return RedirectResponse
      * @throws GuzzleException
      */
-    public function login(): RedirectResponse
+    public function login(
+        string $clientId = null,
+        string $pass1 = null,
+        string $pass2 = null,
+        string $pass3 = null,
+        string $pass4 = null,
+        string $pass5 = null
+    ): RedirectResponse
     {
-        return redirect($this->client->get('/fitt-communicator/login')->getBody()->getContents());
+        $params = [];
+        if (!empty($clientId)) {
+            $params[] = 'id='.$clientId;
+        }
+        if (!empty($pass1)) {
+            $params[] = 'pass1='.$pass1;
+        }
+        if (!empty($pass2)) {
+            $params[] = 'pass2='.$pass2;
+        }
+        if (!empty($pass3)) {
+            $params[] = 'pass3='.$pass3;
+        }
+        if (!empty($pass4)) {
+            $params[] = 'pass4='.$pass4;
+        }
+        if (!empty($pass5)) {
+            $params[] = 'pass5='.$pass5;
+        }
+
+        $url = '/fitt-communicator/login';
+        $string = '';
+        if (!empty($params)) {
+            $string = '?';
+            foreach ($params as $param) {
+                $string .= $param . '&';
+            }
+            $string = substr($string, 0, -1);
+        }
+        return redirect($this->client->get($url.$string)->getBody()->getContents());
     }
 
     /**
