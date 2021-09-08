@@ -4,6 +4,16 @@ This is a package that retrieves the person ID from fitt, and returns it to the 
 
 ## Installation
 
+Add the repository to your composer.json file:
+```bash
+"repositories": [
+    {
+        "url": "https://github.com/psychai/fitt-communicator.git",
+        "type": "git"
+    }
+],
+```
+
 Run the following command:
 ```bash
 composer require psychai/fitt-communicator

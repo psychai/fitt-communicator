@@ -63,6 +63,10 @@ class FittCommunicator
             abort(401);
         }
 
+        if (empty($this->config['fitt-communicator']['callback_url'])) {
+            die('Please setup your FITT_COMMUNICATOR_CALLBACK_URL. See the README.md for more information.');
+        }
+
         return redirect($this->config['fitt-communicator']['callback_url'].'?pid='.$request->get('pid').'&action='.$request->get('action'));
     }
 
