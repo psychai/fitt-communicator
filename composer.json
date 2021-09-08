@@ -12,7 +12,7 @@
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
         "ext-curl": "*",
-        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/guzzle": "^6.0 | ^7.3",
         "illuminate/support": "^6.0 | ^7.0 | ^8.0",
         "illuminate/routing": "^6.0 | ^7.0 | ^8.0",
         "illuminate/http": "^6.0 | ^7.0 | ^8.0"
