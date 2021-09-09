@@ -46,6 +46,10 @@ In that endpoint, you can add the following code to manage the process:
         case 'assessment':
             // Custom code here
             return redirect(/** Page after assessment */);
+            
+        case 'assessment_paused':
+            // Custom code here
+            return redirect(/** Page after assessment_paused */);
     }
 ```
 
