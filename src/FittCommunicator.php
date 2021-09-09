@@ -81,11 +81,11 @@ class FittCommunicator
             'pid' => 'required|string',
             'nonce' => 'required|string',
             'action' => 'required|string',
-            'pass1' => 'optional|string',
-            'pass2' => 'optional|string',
-            'pass3' => 'optional|string',
-            'pass4' => 'optional|string',
-            'pass5' => 'optional|string',
+            'pass1' => 'nullable|string',
+            'pass2' => 'nullable|string',
+            'pass3' => 'nullable|string',
+            'pass4' => 'nullable|string',
+            'pass5' => 'nullable|string',
         ]);
 
         if ($request->get('client_id') !== hash('sha256', $this->config['fitt-communicator']['client_id'].$this->config['fitt-communicator']['client_secret'].$request->get('nonce'))) {
