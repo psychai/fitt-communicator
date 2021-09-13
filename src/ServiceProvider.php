@@ -2,6 +2,8 @@
 
 namespace Psychai\FittCommunicator;
 
+use Psychai\FittCommunicator\Middleware\CallbackMiddleware;
+
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function register()
@@ -15,6 +17,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
             return new FittCommunicator($options);
         });
+
+        $this->app['router']->aliasMiddleware('fitt-communicator:callback-middleware', CallbackMiddleware::class);
     }
 
     public function boot()

@@ -30,6 +30,8 @@ FITT_COMMUNICATOR_CALLBACK_URL=
 ```
 The CLIENT ID and SECRET is set in the Fitt System. The CALLBACK URL is the local endpoint where the system should redirect you back with the person's ID who is using the system.
 
+To ensure your callback endpoint is secure, please register the `fitt-communicator:callback-middleware`  on  the route.
+
 In that endpoint, you can add the following code to manage the process:
 ```php
     $personId = $request->get('pid');

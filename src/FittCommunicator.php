@@ -81,6 +81,7 @@ class FittCommunicator
             'pid' => 'required|string',
             'nonce' => 'required|string',
             'action' => 'required|string',
+            'action_param' => 'nullable|string',
             'pass1' => 'nullable|string',
             'pass2' => 'nullable|string',
             'pass3' => 'nullable|string',
@@ -96,7 +97,7 @@ class FittCommunicator
             die('Please setup your FITT_COMMUNICATOR_CALLBACK_URL. See the README.md for more information.');
         }
 
-        $string = '';
+        $string = '?pid='.$request->get('pid').'&action='.$request->get('action').'&action_param='.$request->get('action_param');
         if ($request->has('pass1')) {
             $string .= '&pass1='.$request->get('pass1');
         }
@@ -113,7 +114,19 @@ class FittCommunicator
             $string .= '&pass5='.$request->get('pass5');
         }
 
-        return redirect($this->config['fitt-communicator']['callback_url'].'?pid='.$request->get('pid').'&action='.$request->get('action').$string);
+        $hash = hash('sha256',
+            $request->get('pid').
+            $request->get('action').
+            $request->get('action_param').
+            $request->get('pass1').
+            $request->get('pass2').
+            $request->get('pass3').
+            $request->get('pass4').
+            $request->get('pass5').
+            $this->config['fitt-communicator']['client_secret']
+        );
+
+        return redirect($this->config['fitt-communicator']['callback_url'].$string.'&c='.$hash);
     }
 
     /**
